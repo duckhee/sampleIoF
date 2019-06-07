@@ -1,20 +1,20 @@
 var express = require('express');
 var router = express.Router();
 const IndexCtrl = require('../controller/index.controller.js');
-const getReq = require('request')
+
 
 
 /* GET home page. */
 router.get('/', IndexCtrl.Index);
 
-router.get('/device', (req, res, next) => {
-    var no = req.query.no || req.params.no || req.param.no || req.body.no;
-    getReq('http://www.iof.center/DataValue/getDeviceList10?no=' + no, (err, response, body) => {
-        console.log("no :::::::::::::: " + no);
-        console.log("response", typeof (body));
-        res.send(body);
+router.get('/device', IndexCtrl.DeviceData);
 
-    });
-});
+router.get('/cellOne', IndexCtrl.CellOwn);
+
+router.get('/cellTwo', IndexCtrl.CellTwo);
+
+router.get('/cellThree', IndexCtrl.CellThree);
+
+router.get('/image', IndexCtrl.ImageData);
 
 module.exports = router;
