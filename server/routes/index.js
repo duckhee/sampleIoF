@@ -1,12 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const IndexCtrl = require('../ctrl/index.controller.js');
+
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('pages/index', {
-    title: 'Welcome Main Page',
-    login: null
-  });
-});
+router.get('/', IndexCtrl.Index);
 
 module.exports = router;
