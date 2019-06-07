@@ -13,7 +13,7 @@
     </div>
     <div class="box-body">
         <div id="cell1-chartLegend"></div>
-        <div class="cell1-chart" style="height:300px;"></div>
+        <div id="cell1-chart" style="height:300px;"></div>
     </div>
 </div>
 
@@ -28,7 +28,7 @@
     </div>
     <div class="box-body">
         <div id="cell2-chartLegend"></div>
-        <div class="cell2-chart" style="height:300px;"></div>
+        <div id="cell2-chart" style="height:300px;"></div>
     </div>
 </div>
 
@@ -43,14 +43,14 @@
     </div>
     <div class="box-body">
         <div id="cell3-chartLegend"></div>
-        <div class="cell3-chart" style="height:300px;"></div>
+        <div id="cell3-chart" style="height:300px;"></div>
     </div>
 </div>
 
 </div>
 </div>
 </section>
-<%include ../partials/include_footer.ejs %>
+<% include ../partials/include_footer.ejs %>
 <!-- FLOT CHARTS -->
 <script src="/static/plugins/flot/jquery.flot.min.js"></script>
 <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
@@ -71,9 +71,15 @@
 <!-- date-range-picker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="/static/custom/util.js"></script>
-</body>
-<script>
+<script type="text/javascript">
+ $(document).ready(function(){
+     function labelFormatter(label, series) {
+                return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
+                    label +
+                    "<br>" +
+                    Math.round(series.percent) +
+                    "%</div>";
+            }
     function getCell1(){
         $.ajax({
             type:"GET",
@@ -86,8 +92,80 @@
             },
             success:function(data)
             {
-                console.log('get cell1 data ::: '+data);
-
+                //console.log('cell1 type ::: '+typeof(data));
+                var cell1Ajax = data;
+                //console.log("get cell3 data ::: "+data);
+                var waterData = new Array();
+                var tempData = new Array();
+                var getWaterData = [];
+                var getTempData = [];
+                for(var i in cell1Ajax)
+                {
+                    //console.log("cell 1 :::: "+cell1Ajax[i]);
+                    //console.log("cell1 water :::: "+cell1Ajax[i].waterContent);
+                    getWaterData.push([(cell1Ajax.length - i),cell1Ajax[i].waterContent]);
+                    //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
+                    getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
+                }
+                var colorArr = ["#3c8dbc", "#00c0ef"];
+                var levelIs = ["water","temp"];
+                data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
+                //make chart
+                $.plot("#cell1-chart", data_line, {
+                            grid: {
+                                hoverable: true,
+                                borderColor: "#f3f3f3",
+                                borderWidth: 1,
+                                tickColor: "#f3f3f3"
+                            },
+                            series: {
+                                shadowSize: 0,
+                                lines: {
+                                    show: true
+                                },
+                                points: {
+                                    show: true
+                                }
+                            },
+                            lines: {
+                                fill: false
+                            },
+                            yaxis: {
+                                show: true
+                            },
+                            xaxis: {
+                                // 이 설정은 x축의 보여지는 것이 날짜 기준으로 하기 위해서 있는 것이다.                                
+                                mode: "categories",
+                                show: true
+                            },
+                               legend: {
+                                show: true,
+                                noColumns: 0,
+                                container: $("#cell1-chartLegend")       
+                            }
+                            });
+                             //Initialize tooltip on hover
+            $('<div class="tooltip-inner" id="cell1-chart-tooltip"></div>').css({
+                position: "absolute",
+                display: "none",
+                opacity: 0.8
+            }).appendTo("body");
+            $("#cell1-chart").bind("plothover", function(event, pos, item) {
+                if (item) {
+                    
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                        var num = String(Number(x) + 1);
+                        var res = num.replace(/[^1-9]/g, "");
+                    //$("#sensor-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
+                    $("#cell1-chart-tooltip").html(res + " value : " + y).css({
+                        top: item.pageY + 5,
+                        left: item.pageX + 5
+                    }).fadeIn(200);
+                } else {
+                    $("#cell1-chart-tooltip").hide();
+                }
+            });   
             }
         });
     }
@@ -105,8 +183,83 @@
             },
             success:function(data)
             {
-                console.log("get cell2 data :: "+data)
+                //console.log('cell1 type ::: '+typeof(data));
+                var cell1Ajax = data;
+                //console.log("get cell3 data ::: "+data);
+                var waterData = new Array();
+                var tempData = new Array();
+                var getWaterData = [];
+                var getTempData = [];
+                for(var i in cell1Ajax)
+                {
+                    //console.log("cell 1 :::: "+cell1Ajax[i]);
+                    //console.log("cell1 water :::: "+cell1Ajax[i].waterContent);
+                    getWaterData.push([(cell1Ajax.length - i),cell1Ajax[i].waterContent]);
+                    //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
+                    getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
+                }
+                var colorArr = ["#3c8dbc", "#00c0ef"];
+                var levelIs = ["water","temp"];
+                data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
+                //make chart
+                $.plot("#cell2-chart", data_line, {
+                            grid: {
+                                hoverable: true,
+                                borderColor: "#f3f3f3",
+                                borderWidth: 1,
+                                tickColor: "#f3f3f3"
+                            },
+                            series: {
+                                shadowSize: 0,
+                                lines: {
+                                    show: true
+                                },
+                                points: {
+                                    show: true
+                                }
+                            },
+                            lines: {
+                                fill: false
+                            },
+                            yaxis: {
+                                show: true
+                            },
+                            xaxis: {
+                                // 이 설정은 x축의 보여지는 것이 날짜 기준으로 하기 위해서 있는 것이다.                                
+                                mode: "categories",
+                                show: true
+                            },
+                               legend: {
+                                show: true,
+                                noColumns: 0,
+                                container: $("#cell2-chartLegend")       
+                            }
+                            }
+                            );
+                             //Initialize tooltip on hover
+            $('<div class="tooltip-inner" id="cell2-chart-tooltip"></div>').css({
+                position: "absolute",
+                display: "none",
+                opacity: 0.8
+            }).appendTo("body");
+            $("#cell2-chart").bind("plothover", function(event, pos, item) {
+                if (item) {
+                    
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                        var num = String(Number(x) + 1);
+                        var res = num.replace(/[^1-9]/g, "");
+                    //$("#sensor-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
+                    $("#cell2-chart-tooltip").html(res + " value : " + y).css({
+                        top: item.pageY + 5,
+                        left: item.pageX + 5
+                    }).fadeIn(200);
+                } else {
+                    $("#cell2-chart-tooltip").hide();
+                }
+            });   
             }
+
 
         });
     }
@@ -116,6 +269,7 @@
         $.ajax({
             type:"GET",
             url:"/device?no=4",
+            dataType:"json",
             error:function()
             {
                 var cell3Ajax;
@@ -123,58 +277,89 @@
             },
             success:function(data)
             {
-                console.log("get cell3 data ::: "+data);
+               //console.log('cell1 type ::: '+typeof(data));
+                var cell1Ajax = data;
+                //console.log("get cell3 data ::: "+data);
+                var waterData = new Array();
+                var tempData = new Array();
+                var getWaterData = [];
+                var getTempData = [];
+                for(var i in cell1Ajax)
+                {
+                    //console.log("cell 1 :::: "+cell1Ajax[i]);
+                    //console.log("cell1 water :::: "+cell1Ajax[i].waterContent);
+                    getWaterData.push([(cell1Ajax.length - i),cell1Ajax[i].waterContent]);
+                    //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
+                    getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
+                }
+                var colorArr = ["#3c8dbc", "#00c0ef"];
+                 var levelIs = ["water","temp"];
+                data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
+                //make chart
+                $.plot("#cell3-chart", data_line, {
+                            grid: {
+                                hoverable: true,
+                                borderColor: "#f3f3f3",
+                                borderWidth: 1,
+                                tickColor: "#f3f3f3"
+                            },
+                            series: {
+                                shadowSize: 0,
+                                lines: {
+                                    show: true
+                                },
+                                points: {
+                                    show: true
+                                }
+                            },
+                            lines: {
+                                fill: false
+                            },
+                            yaxis: {
+                                show: true
+                            },
+                            xaxis: {
+                                // 이 설정은 x축의 보여지는 것이 날짜 기준으로 하기 위해서 있는 것이다.                                
+                                mode: "categories",
+                                show: true
+                            },
+                               legend: {
+                                show: true,
+                                noColumns: 0,
+                                container: $("#cell3-chartLegend")       
+                            }
+                            });
+                             //Initialize tooltip on hover
+            $('<div class="tooltip-inner" id="cell3-chart-tooltip"></div>').css({
+                position: "absolute",
+                display: "none",
+                opacity: 0.8
+            }).appendTo("body");
+            $("#cell3-chart").bind("plothover", function(event, pos, item) {
+                if (item) {
+                    
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                        var num = String(Number(x) + 1);
+                        var res = num.replace(/[^1-9]/g, "");
+                    //$("#sensor-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
+                    $("#cell3-chart-tooltip").html(res + " value : " + y).css({
+                        top: item.pageY + 5,
+                        left: item.pageX + 5
+                    }).fadeIn(200);
+                } else {
+                    $("#cell3-chart-tooltip").hide();
+                }
+            });   
             }
 
         });
     }
-
-    var option = {
-        grid:{
-            hoverable:true,
-            borderColor:"#f3f3f3",
-            borderWidth:1,
-            tickColor:"#f3f3f3"
-        },
-        series:{
-            shoadowSize:0,
-            lines:{
-                show:true
-            },
-            points:{
-                show:true
-            }
-            },
-            lines:{
-                fill:false,
-                color: ["#3c8dbc", "#f56954"]
-            },
-            yaxis:{
-                show:true,
-            },
-            xaxis:{
-                mode:'categories',
-                show:true
-            },
-            legend:{
-                show:true,
-                noColumns:0,
-                container:$("#cell1-chartLegend")
-            }
-        };
-    
-    var data_chart1 = {
-        cnt:0,
-        chart:'',
-        init:function(temp, water){
-            this.cnt = 1;
-            this.chart = $.plot("#cell1-chart", [temp, water], option);
-        }
-    }
-
+     getCell2();
     getCell1();
-    getCell2();
     getCell3();
+ });
 </script>
+</body>
 </html>
 
