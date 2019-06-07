@@ -51,6 +51,91 @@
 </div>
 </section>
 <%include ../partials/include_footer.ejs %>
+<!-- FLOT CHARTS -->
+<script src="/static/plugins/flot/jquery.flot.min.js"></script>
+<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+<script src="/static/plugins/flot/jquery.flot.resize.min.js"></script>
+<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+<script src="/static/plugins/flot/jquery.flot.pie.min.js"></script>
+<!-- FLOT TIME PLUGIN - also used to time charts -->
+<script src="/static/plugins/flot/jquery.flot.time.js"></script>
+<!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
+<script src="/static/plugins/flot/jquery.flot.categories.min.js"></script>
+<!-- custom javascript chart -->
+<script src="/static/chart_function/float_input.js"></script>
+<!-- Morris.js charts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="/static/plugins/morris/morris.min.js"></script>
+<!-- FastClick -->
 
+<!-- date-range-picker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/static/custom/util.js"></script>
 </body>
+<script>
+    function getCell1(){
+        $.ajax({
+            type:"GET",
+            url:"http://www.iof.center/DataValue/getDeviceList10?no=1",
+            dataType:"json",
+            error:function()
+            {
+                var cell1Ajax;
+                cell1Ajax = null;
+            },
+            success:function(data)
+            {
+                console.log('get data ::: '+data);
+
+            }
+        });
+    }
+
+    var option = {
+        grid:{
+            hoverable:true,
+            borderColor:"#f3f3f3",
+            borderWidth:1,
+            tickColor:"#f3f3f3"
+        },
+        series:{
+            shoadowSize:0,
+            lines:{
+                show:true
+            },
+            points:{
+                show:true
+            }
+            },
+            lines:{
+                fill:false,
+                color: ["#3c8dbc", "#f56954"]
+            },
+            yaxis:{
+                show:true,
+            },
+            xaxis:{
+                mode:'categories',
+                show:true
+            },
+            legend:{
+                show:true,
+                noColumns:0,
+                container:$("#cell1-chartLegend")
+            }
+        };
+    
+    var data_chart1 = {
+        cnt:0,
+        chart:'',
+        init:function(temp, water){
+            this.cnt = 1;
+            this.chart = $.plot("#cell1-chart", [temp, water], option);
+        }
+    }
+
+    getCell1();
+</script>
 </html>
+

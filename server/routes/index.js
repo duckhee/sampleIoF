@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const IndexCtrl = require('../ctrl/index.controller.js');
+const IndexCtrl = require('../controller/index.controller.js');
 
 
 /* GET home page. */
