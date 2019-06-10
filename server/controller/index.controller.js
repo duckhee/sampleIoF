@@ -46,9 +46,9 @@ const DeviceData = (req, res, next) => {
 
 const ImageData = (req, res, next) => {
     var no = req.query.no || req.params.no || req.param.no || req.body.no;
-    getReq("http://www.iof.center/DeviceImage/Get?no=" + no, (err, response, body) => {
-        console.log(body);
-
+    getReq("http://www.iof.center/DataValue/DeviceImageGet?no=" + no, (err, response, body) => {
+        console.log("no :::::::::::::: " + no);
+        res.send(body);
     });
 };
 
