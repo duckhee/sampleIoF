@@ -21,7 +21,9 @@
     <div class="box-header with-border">
         <i class="fa fa-fw fa-file-image-o"></i>
         <h3 class="box-title">Cell 1 Image</h3>
-        
+        <div class="box-tools">
+            <section id="imgName"></section>
+        </div>
     </div>
     <div class="box-body">
         <div id="show-image">
@@ -186,14 +188,20 @@
                     var getImageUrl = "http://www.iof.center/DeviceImage/"+imgPath;
                     console.log(getImageUrl);
                     $("#show-image").find("img").attr("src", getImageUrl);
+                    console.log(new Date(data[0].createdAt));
+                    $("#imgName").text(new Date(data[0].createdAt));
                 }
             }
         });
     }
 
+        getCell1();
+        get_image();
+    setInterval(function(){
+        getCell1();
+        get_image();
+    }, 1000*60*60);
     
-    getCell1();
-    get_image();
  });
 </script>
 </body>
