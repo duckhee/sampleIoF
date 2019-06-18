@@ -292,7 +292,7 @@
                     //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
                     getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
                 }
-                var colorArr = ["#3c8dbc", "#00c0ef"];
+                var colorArr = ["#3c8dbc", "#ef0000"];
                  var levelIs = ["water","temp"];
                 data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
                 //make chart
