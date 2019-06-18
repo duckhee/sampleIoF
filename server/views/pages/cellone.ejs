@@ -9,7 +9,17 @@
     <div class="box-header with-border">
         <i class="fa fa-bar-chart-o"></i>
         <h3 class="box-title">Cell 1</h3>
+        <div class="box-tools">
         
+            <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title data-original-title="Date range">
+                <i class="fa fa-calendar"></i>
+                Download
+            </button>
+            <form id="test" name="test" action="" method="">
+                <input type="date" id="startCal" name="startCal" hidden="true">
+                <input type="date" id="endCal" name="endCal" hidden="true">
+            </form>
+        </div>
     </div>
     <div class="box-body">
         <div id="cell1-chartLegend"></div>
@@ -53,12 +63,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="/static/plugins/morris/morris.min.js"></script>
 <!-- FastClick -->
-
-<!-- date-range-picker -->
+<!-- daterangepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- datepicker -->
+<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+
 <script type="text/javascript">
  $(document).ready(function(){
+
+     
+      //down load range start  
+        $('.daterange').daterangepicker({
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment(),
+            
+        },  function(start, end){
+                console.log(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                $("#startCal").val(start.format('YYYY-MM-DD'));
+                $("#endCal").val(end.format('YYYY-MM-DD'));
+                document.test.action="/downloadData?no=1";
+                document.test.method="POST";
+                document.test.submit();
+        });
+
+      //down load range end
+
      function labelFormatter(label, series) {
                 return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
                     label +
@@ -93,7 +123,7 @@
                     //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
                     getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
                 }
-                var colorArr = ["#3c8dbc", "#00c0ef"];
+                var colorArr = ["#3c8dbc", "#ef0000"];
                 var levelIs = ["water","temp"];
                 data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
                 //make chart
