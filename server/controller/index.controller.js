@@ -1,9 +1,9 @@
 const getReq = require('request');
 
-const Index = (req, res, next) => {
+const IndexPage = (req, res, next) => {
     console.log("main ctrl");
 
-    res.render('index', {
+    res.render('reindex', {
         title: 'samplePage',
         login: null
     });
@@ -44,6 +44,20 @@ const DeviceData = (req, res, next) => {
     });
 };
 
+const DeviceDataAll = (req, res, next) => {
+    var no = req.query.no || req.param.no || req.params.no;
+    console.log('device all data get');
+    getReq('http://www.iof.center/DataValue/getDeviceListAll?no=' + no, (err, response, body) => {
+        if (err) {
+            console.log('error code ::::: ' + err.code);
+            console.log('error ::::: ' + err);
+        }
+        console.log('response', typeof (body));
+        console.log("no :::::::::::::: " + no);
+        res.send(body);
+    });
+};
+
 const ImageData = (req, res, next) => {
     var no = req.query.no || req.params.no || req.param.no || req.body.no;
     getReq("http://www.iof.center/DataValue/DeviceImageGet?no=" + no, (err, response, body) => {
@@ -53,10 +67,11 @@ const ImageData = (req, res, next) => {
 };
 
 module.exports = {
-    Index,
+    IndexPage,
     CellOwn,
     CellTwo,
     CellThree,
     DeviceData,
+    DeviceDataAll,
     ImageData
 };

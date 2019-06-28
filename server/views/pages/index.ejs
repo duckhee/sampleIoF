@@ -47,6 +47,8 @@
     </div>
 </div>
 
+<div id="testChart"></div>
+
 </div>
 </div>
 </section>
@@ -67,12 +69,59 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="/static/plugins/morris/morris.min.js"></script>
 <!-- FastClick -->
+<!-- apexcharts chart cdn -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <!-- date-range-picker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 <script type="text/javascript">
  $(document).ready(function(){
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ let options = {
+        chart:{
+            type:"line",
+            zoom:{
+            type:'x',
+            enabled:true
+        },
+        toolbar:{
+            autoSelected:'zoom'
+        },
+        },
+        
+        series:[{
+            name:'testing',
+            data:[30,40,35,50,49,60,70,91,125]
+        }],
+        xaxis:{
+            categories:[1991,1992,1993,1994,1995,1996,1997,1998,1999]
+        }
+    };
+    var chart = new ApexCharts(document.querySelector('#testChart'), options);
+function TestingChart(chart)
+{
+    chart.render();
+}
+
+function updateTest(chart){
+    
+//    chart.updateOptions({series:[
+//        {
+//            name:'series 1',
+//            data:[30,40,35,50,49,60,70,91,125]
+//        }
+//    ]});
+    
+    chart.updateSeries([{name:'series1'}]);
+}
+TestingChart(chart);
+updateTest(chart);
+
+*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
      function labelFormatter(label, series) {
                 return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
                     label +

@@ -3,9 +3,11 @@ var router = express.Router();
 const IndexCtrl = require("../controller/index.controller.js");
 
 /* GET home page. */
-router.get("/", IndexCtrl.Index);
+router.get("/", IndexCtrl.IndexPage);
 
 router.get("/device", IndexCtrl.DeviceData);
+
+router.get('/deviceAll', IndexCtrl.DeviceDataAll);
 
 router.get("/cellOne", IndexCtrl.CellOwn);
 
@@ -24,7 +26,7 @@ router.post("/downloadData", (req, res, next) => {
     const endDate =
         req.query.endCal || req.body.endCal || req.param.endCal || req.params.endCal;
     console.log("downloadData");
-    console.log("bno ::: "+bno+", start ::: " + startDate + ", end ::: " + endDate);
+    console.log("bno ::: " + bno + ", start ::: " + startDate + ", end ::: " + endDate);
     res.send("<script>history.back();</script>");
 });
 
