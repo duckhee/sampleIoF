@@ -23,7 +23,7 @@
     </div>
     <div class="box-body">
         <div id="cell1-chartLegend"></div>
-        <div id="cell1-chart" style="height:300px;"></div>
+        <div id="cell3-chart" style="height:300px;"></div>
     </div>
 </div>
 
@@ -72,9 +72,36 @@
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
-
+<!-- apexcharts chart cdn -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script type="text/javascript">
  $(document).ready(function(){
+     function getAjaxMakeChartTempData(data){
+          var i = 0;
+          var series = [];
+          
+          while(i < data.length){
+              var x = new Date(data[i].time).getTime();
+              var y = data[i].temp;
+              series.push([x, y]);
+              i++;
+          }
+          return series;
+      }
+      function getAjaxMakeChartData(data){
+          var i = 0;
+          var series = [];
+          console.log(data);
+          while(i < data.length){
+              var x = new Date(data[i].time).getTime();
+              //console.log('x :::: '+x);
+              var y = data[i].waterContent;
+              //console.log('y :::: '+y);
+              series.push([x, y]);
+              i++;
+          }
+          return series;
+      }
         //down load range start  
         $('.daterange').daterangepicker({
             startDate: moment().subtract(29, 'days'),
@@ -108,83 +135,92 @@
                 var cell1Ajax;
                 cell1Ajax = null;
             },
-            success:function(data)
-            {
-                //console.log('cell1 type ::: '+typeof(data));
-                var cell1Ajax = data;
-                //console.log("get cell3 data ::: "+data);
-                var waterData = new Array();
-                var tempData = new Array();
-                var getWaterData = [];
-                var getTempData = [];
-                for(var i in cell1Ajax)
-                {
-                    //console.log("cell 1 :::: "+cell1Ajax[i]);
-                    //console.log("cell1 water :::: "+cell1Ajax[i].waterContent);
-                    getWaterData.push([(cell1Ajax.length - i),cell1Ajax[i].waterContent]);
-                    //console.log("cell1 temp :::: "+cell1Ajax[i].temp);
-                    getTempData.push([(cell1Ajax.length - i),cell1Ajax[i].temp]);
-                }
-                var colorArr = ["#3c8dbc", "#ef0000"];
-                var levelIs = ["water","temp"];
-                data_line = [{data:getWaterData.reverse(), color:colorArr[0],label:levelIs[0]},{data:getTempData.reverse(), color:colorArr[1], label:levelIs[1]}];
-                //make chart
-                $.plot("#cell1-chart", data_line, {
-                            grid: {
-                                hoverable: true,
-                                borderColor: "#f3f3f3",
-                                borderWidth: 1,
-                                tickColor: "#f3f3f3"
-                            },
-                            series: {
-                                shadowSize: 0,
-                                lines: {
-                                    show: true
-                                },
-                                points: {
-                                    show: true
-                                }
-                            },
-                            lines: {
-                                fill: false
-                            },
-                            yaxis: {
-                                show: true
-                            },
-                            xaxis: {
-                                // 이 설정은 x축의 보여지는 것이 날짜 기준으로 하기 위해서 있는 것이다.                                
-                                mode: "categories",
-                                show: true
-                            },
-                               legend: {
-                                show: true,
-                                noColumns: 0,
-                                container: $("#cell1-chartLegend")       
-                            }
-                            });
-                             //Initialize tooltip on hover
-            $('<div class="tooltip-inner" id="cell1-chart-tooltip"></div>').css({
-                position: "absolute",
-                display: "none",
-                opacity: 0.8
-            }).appendTo("body");
-            $("#cell1-chart").bind("plothover", function(event, pos, item) {
-                if (item) {
-                    
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                        var num = String(Number(x) + 1);
-                        var res = num.replace(/[^1-9]/g, "");
-                    //$("#sensor-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
-                    $("#cell1-chart-tooltip").html(res + " value : " + y).css({
-                        top: item.pageY + 5,
-                        left: item.pageX + 5
-                    }).fadeIn(200);
-                } else {
-                    $("#cell1-chart-tooltip").hide();
-                }
-            });   
+            success:function(data){
+                 var cell1Ajax = data;
+                 var options = {
+      chart: {
+        height: 350,
+        type: 'area',
+        stacked: true,
+        events: {
+          selection: function(chart, e) {
+            console.log(new Date(e.xaxis.min) )
+          }
+        },
+
+      },
+      colors: ['#008FFB', '#00E396', '#CED4DC'],
+      dataLabels: {
+          enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+
+      series: [{
+          name: 'waterContent',
+          data: getAjaxMakeChartData(cell1Ajax)
+        },
+       {
+           name:'tempContent',
+           data:getAjaxMakeChartTempData(cell1Ajax)
+       }
+      ],
+      fill: {
+        type: 'gradient',
+        gradient: {
+          opacityFrom: 0.6,
+          opacityTo: 0.8,
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'left'
+      },
+      xaxis: {
+        type: 'datetime'
+      },
+      tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
             }
+    }
+
+    var chart = new ApexCharts(
+      document.querySelector("#cell3-chart"),
+      options
+    );
+
+    chart.render();
+
+    /*
+      // this function will generate output in this format
+      // data = [
+          [timestamp, 23],
+          [timestamp, 33],
+          [timestamp, 12]
+          ...
+      ]
+      */
+
+   
+    function generateDayWiseTimeSeries(baseval, count, yrange) {
+      var i = 0;
+      var series = [];
+      while (i < count) {
+        var x = baseval;
+        var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+        series.push([x, y]);
+        baseval += 86400000;
+        i++;
+      }
+      return series;
+    }
+
+  
+             }
         });
     }
 

@@ -8,6 +8,21 @@
 <div class="box box-primary">
     <div class="box-header with-border">
         <i class="fa fa-bar-chart-o"></i>
+        <h3 class="box-title">Weather</h3>
+        
+    </div>
+    <div class="box-body">
+        <div id="cell1-chartLegend"></div>
+        <div id="weater-chart" style="height:300px;"></div>
+    </div>
+</div>
+
+</div>
+<div class="col-xs-12">
+<!-- box set-->
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <i class="fa fa-bar-chart-o"></i>
         <h3 class="box-title">Cell 1</h3>
         
     </div>
@@ -89,6 +104,7 @@
               series.push([x, y]);
               i++;
           }
+          console.log('series Testing Water Content ::: ', series);
           return series;
       }
       function getAjaxMakeChartData(data){
@@ -103,7 +119,18 @@
               series.push([x, y]);
               i++;
           }
+          console.log('series Testing Water Content ::: ', series);
           return series;
+      }
+      function Series(DataInput){
+        var Name = 'waterContent';
+        let Data = getAjaxMakeChartData(DataInput);
+        console.log("Get Data value ::: ", Data);
+        let NameJson = {
+          name:Name,
+          data:Data
+        };
+        return NameJson;
       }
      function getCell1(){
          $.ajax({
@@ -137,10 +164,7 @@
         curve: 'smooth'
       },
 
-      series: [{
-          name: 'waterContent',
-          data: getAjaxMakeChartData(cell1Ajax)
-        },
+      series: [Series(cell1Ajax),
        {
            name:'tempContent',
            data:getAjaxMakeChartTempData(cell1Ajax)
@@ -160,6 +184,11 @@
       xaxis: {
         type: 'datetime'
       },
+      tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
+            }
     }
 
     var chart = new ApexCharts(
@@ -254,6 +283,11 @@
       xaxis: {
         type: 'datetime'
       },
+      tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
+            }
     }
 
     var chart = new ApexCharts(
@@ -349,6 +383,11 @@
       xaxis: {
         type: 'datetime'
       },
+      tooltip: {
+                x: {
+                    format: 'dd/MM/yy HH:mm'
+                },
+            }
     }
 
     var chart = new ApexCharts(
